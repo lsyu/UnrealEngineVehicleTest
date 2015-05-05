@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Dirs
+Binaries/
+Build/
+Intermediate/
+Saved/
