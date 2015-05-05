@@ -15,4 +15,10 @@ class MYVEHICLE_API AMyVehicleGameMode : public AGameMode
 	
 public:
 	AMyVehicleGameMode(const FObjectInitializer& ObjectInitializer);
+
+	/** select best spawn point for player */
+	virtual AActor* ChoosePlayerStart(AController* Player) override;
+
+	/** check if player should use spawnpoint */
+	virtual bool IsSpawnpointPreferred(APlayerStart* SpawnPoint, AController* Player) const;
 };
