@@ -10,20 +10,40 @@ AMyVehicleGameMode::AMyVehicleGameMode(const FObjectInitializer& ObjectInitializ
 	DefaultPawnClass = AVehiclePawn::StaticClass();
 }
 
+bool AMyVehicleGameMode::ShouldSpawnAtStartSpot(AController* Player)
+{
+	return false;
+}
+
 AActor* AMyVehicleGameMode::ChoosePlayerStart(AController* Player)
 {
-	APlayerStart* SpawnExists = nullptr;
+	TArray<APlayerStart*> FallbackSpawns;
+	APlayerStart* TestSpawn = nullptr;
 	for (int32 i = 0; i < PlayerStarts.Num(); i++)
 	{
-		APlayerStart* TestSpawn = PlayerStarts[i];
-		if (IsSpawnpointPreferred(TestSpawn, Player))
+		if (Cast<APlayerStartPIE>(PlayerStarts[i]) != nullptr)
 		{
-			SpawnExists = TestSpawn;
+			// Always prefer the first "Play from Here" PlayerStart, if we find one while in PIE mode
+			TestSpawn = PlayerStarts[i];
 			break;
+		}
+		else if (PlayerStarts[i] != nullptr && IsSpawnpointPreferred(PlayerStarts[i], Player))
+		{
+			TestSpawn = PlayerStarts[i];
+			break;
+		}
+		else
+		{
+			FallbackSpawns.Add(PlayerStarts[i]);
 		}
 	}
 
-	return SpawnExists ? SpawnExists : Super::ChoosePlayerStart(Player);
+	if (!TestSpawn)
+	{
+		TestSpawn = FallbackSpawns[FMath::RandHelper(FallbackSpawns.Num())];
+	}
+
+	return TestSpawn ? TestSpawn : Super::ChoosePlayerStart(Player);
 }
 
 bool AMyVehicleGameMode::IsSpawnpointPreferred(APlayerStart* SpawnPoint, AController* Player) const
@@ -37,9 +57,9 @@ bool AMyVehicleGameMode::IsSpawnpointPreferred(APlayerStart* SpawnPoint, AContro
 			ACharacter* OtherPawn = Cast<ACharacter>(*It);
 			if (OtherPawn && OtherPawn != MyPawn)
 			{
-				const float CombinedHeight = (MyPawn->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + OtherPawn->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()) * 2.0f;
-				const float CombinedRadius = MyPawn->GetCapsuleComponent()->GetScaledCapsuleRadius() + OtherPawn->GetCapsuleComponent()->GetScaledCapsuleRadius();
-				const FVector& OtherLocation = OtherPawn->GetActorLocation();
+				const float CombinedHeight = (MyPawn->CapsuleComponent->GetScaledCapsuleHalfHeight() + OtherPawn->CapsuleComponent->GetScaledCapsuleHalfHeight()) * 2.0f;
+				const float CombinedRadius = MyPawn->CapsuleComponent->GetScaledCapsuleRadius() + OtherPawn->CapsuleComponent->GetScaledCapsuleRadius();
+				const FVector OtherLocation = OtherPawn->GetActorLocation();
 
 				// check if player start overlaps this pawn
 				if (FMath::Abs(SpawnLocation.Z - OtherLocation.Z) < CombinedHeight && (SpawnLocation - OtherLocation).Size2D() < CombinedRadius)

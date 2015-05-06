@@ -16,6 +16,9 @@ class MYVEHICLE_API AMyVehicleGameMode : public AGameMode
 public:
 	AMyVehicleGameMode(const FObjectInitializer& ObjectInitializer);
 
+	/** always pick new random spawn */
+	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;
+
 	/** select best spawn point for player */
 	virtual AActor* ChoosePlayerStart(AController* Player) override;
 

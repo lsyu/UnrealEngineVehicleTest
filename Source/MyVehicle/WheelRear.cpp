@@ -10,7 +10,7 @@ UWheelRear::UWheelRear(const FObjectInitializer& ObjectInitializer)
 	ShapeWidth = 40.0f;
 	SteerAngle = 0.0f;
 
-	TireType->SetFrictionScale(2.1);
+	TireType->SetFrictionScale(4.0f);
 
 	bAffectedByHandbrake = true;
 }

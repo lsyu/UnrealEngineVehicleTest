@@ -64,11 +64,11 @@ AVehiclePawn::AVehiclePawn(const FObjectInitializer& ObjectInitializer)
 
 	// Engine 
 	// Torque setup
-	Vehicle4W->MaxEngineRPM = 100000.0f;
+	Vehicle4W->MaxEngineRPM = 1000.0f;
 	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->Reset();
-	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(0.0f, 60000.0f);
-	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(18900.0f, 153600.0f);
-	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(57300.0f, 60000.0f);
+	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(0.0f, 600.0f);
+	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(189.0f, 1536.0f);
+	Vehicle4W->EngineSetup.TorqueCurve.GetRichCurve()->AddKey(573.0f, 600.0f);
 
 	// Adjust the steering 
 	Vehicle4W->SteeringCurve.GetRichCurve()->Reset();
@@ -85,7 +85,7 @@ AVehiclePawn::AVehiclePawn(const FObjectInitializer& ObjectInitializer)
 	// Automatic gearbox
 	Vehicle4W->TransmissionSetup.bUseGearAutoBox = true;
 	Vehicle4W->TransmissionSetup.GearSwitchTime = 0.5f;
-	Vehicle4W->TransmissionSetup.GearAutoBoxLatency = 0.1f;
+	Vehicle4W->TransmissionSetup.GearAutoBoxLatency = 0.5f;
 	//for (FVehicleGearData& gear : Vehicle4W->TransmissionSetup.ForwardGears)
 	//{
 	//	gear.Ratio = 5;
